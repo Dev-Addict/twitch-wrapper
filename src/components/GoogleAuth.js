@@ -1,4 +1,7 @@
-import React, {Component} from "react";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+
+import {signIn, signOut} from '../actions';
 
 export const clientId = '642199462068-22vbp1b4q1fekikmnu5t6o1qvqhef29r.apps.googleusercontent.com';
 export const scope = 'email';
@@ -6,9 +9,9 @@ export const scope = 'email';
 class GoogleAuth extends Component {
     constructor(props) {
         super(props);
-        this.state = {isSignedIn: undefined};
         this.signOut = this.signOut.bind(this);
         this.signIn = this.signIn.bind(this);
+        this.onAuthChange = this.onAuthChange.bind(this);
     }
 
     componentDidMount() {
@@ -18,12 +21,18 @@ class GoogleAuth extends Component {
                 scope
             }).then(() => {
                 this.auth = window.gapi.auth2.getAuthInstance();
-                this.setState({isSignedIn: this.auth.isSignedIn.get()});
-                this.auth.isSignedIn.listen(() => {
-                    this.setState({isSignedIn: this.auth.isSignedIn.get()});
-                });
+                this.onAuthChange(this.auth.isSignedIn.get());
+                this.auth.isSignedIn.listen(this.onAuthChange);
             });
         });
+    }
+
+    onAuthChange(isSignedIn) {
+        if (isSignedIn) {
+            this.props.signIn();
+        } else {
+            this.props.signOut();
+        }
     }
 
     signOut() {
@@ -35,16 +44,16 @@ class GoogleAuth extends Component {
     }
 
     render() {
-        if (this.state.isSignedIn) {
+        if (this.props.isSignedIn) {
             return (
                 <div className={`${this.props.className}`} onClick={this.signOut}>
                     Sign Out
                 </div>
             );
-        } else if (this.state.isSignedIn === false) {
+        } else if (this.props.isSignedIn === false) {
             return (
                 <div className={`${this.props.className}`} onClick={this.signIn}>
-                    Sign In W/ Google
+                    Sign In W/ <i className="fab fa-google"/>
                 </div>
             );
         }
@@ -56,4 +65,10 @@ class GoogleAuth extends Component {
     }
 }
 
-export default GoogleAuth;
+const mapStateToProps = state => {
+    return {
+        isSignedIn: state.auth.isSignedIn
+    };
+};
+
+export default connect(mapStateToProps, {signIn, signOut})(GoogleAuth);
