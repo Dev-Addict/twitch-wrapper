@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {BrowserRouter, Route, Redirect, Switch} from "react-router-dom";
+import {Router, Route, Redirect, Switch} from "react-router-dom";
+import history from "../history";
 
 import Header from "./Header";
 import StreamCreate from "./stream/StreamCreate";
@@ -12,7 +13,7 @@ import P404 from "./404";
 class App extends Component {
     render() {
         return (
-            <BrowserRouter>
+            <Router history={history}>
                 <Header/>
                 <Switch>
                     <Route path="/" exact component={StreamList}/>
@@ -23,7 +24,7 @@ class App extends Component {
                     <Route psth="/404" component={P404} exact/>
                     <Redirect to="/404"/>
                 </Switch>
-            </BrowserRouter>
+            </Router>
         );
     }
 }
