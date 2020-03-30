@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 
 import {getStreams} from "../../actions";
-import {formFields} from "./StreamCreate";
+import {formFields} from "./StreamForm";
 import '../../style/components/stream/StreamList.css'
 
 class StreamList extends Component{
@@ -25,12 +25,12 @@ class StreamList extends Component{
         });
     }
 
-    renderAdmin({userId}) {
-        if (userId === this.props.userId) {
+    renderAdmin(stream) {
+        if (stream.userId === this.props.userId) {
             return (
                 <div>
-                    <div className="stream-list-stream-edit">Edit</div>
-                    <div className="stream-list-stream-delete">DELETE</div>
+                    <Link className="stream-list-stream-edit" to={`/edit/${stream.id}`}>Edit</Link>
+                    <Link className="stream-list-stream-delete" to={`/delete/${stream.id}`}>DELETE</Link>
                 </div>
             );
         }

@@ -1,31 +1,13 @@
 import React, {Component} from "react";
-import {Field, reduxForm} from "redux-form";
 import {connect} from 'react-redux';
+
 import {createStream} from "../../actions";
+import StreamForm from "./StreamForm";
 
-import '../../style/components/stream/StreamCreate.css';
-
-export const formName = 'STREAM_CREATE';
-export const formFields = {
-    title: 'TITLE',
-    description: 'DESCRIPTION'
-};
-
-class StreamCreate extends Component {
+class StreamCreate extends Component{
     constructor(props) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    renderInput({input, label, meta}) {
-        console.log(meta);
-        return (
-            <div>
-                <label className="stream-create-input-label">{label}</label>
-                <input {...input} className="stream-create-input" placeholder={label}/>
-                <div className="stream-create-input-error">{meta.touched&&!meta.active?meta.error:''}</div>
-            </div>
-        );
     }
 
     onSubmit(formValues) {
@@ -34,34 +16,12 @@ class StreamCreate extends Component {
 
     render() {
         return (
-            <form className="stream-create-container" onSubmit={this.props.handleSubmit(this.onSubmit)}>
-                <Field name={formFields.title} component={this.renderInput}
-                       label={formFields.title.charAt(0) + formFields.title.substr(1).toLowerCase()}/>
-                <Field name={formFields.description} component={this.renderInput}
-                       label={formFields.description.charAt(0) + formFields.description.substr(1).toLowerCase()}/>
-                <button className="stream-create-submit" type="submit">Submit</button>
-            </form>
+            <div>
+                <h3>Create A Stream</h3>
+                <StreamForm onSubmit={this.onSubmit}/>
+            </div>
         );
     }
 }
 
-const validate = formValues => {
-    const errors = {};
-
-    if (!formValues[formFields.title]) {
-        errors[formFields.title] = `You Must Enter Valid ${formFields.title}.`;
-    }
-
-    if (!formValues[formFields.description]) {
-        errors[formFields.description] = `You Must Enter Valid ${formFields.description}.`;
-    }
-
-    return errors;
-};
-
-const formWrapped = reduxForm({
-    form: formName,
-    validate
-})(StreamCreate);
-
-export default connect(null, {createStream})(formWrapped);
+export default connect(null, {createStream})(StreamCreate)
