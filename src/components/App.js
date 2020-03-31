@@ -18,7 +18,7 @@ class App extends Component {
                 <Switch>
                     <Route path="/" exact component={StreamList}/>
                     <Route path="/delete/:id" exact component={StreamDelete}/>
-                    <Route path="/edit/:id" exact component={StreamEdit}/>
+                    <Route path="/edit/:id" component={StreamEdit}/>
                     <Route path="/create" exact component={StreamCreate}/>
                     <Route path="/show/:id" exact component={StreamShow}/>
                     <Route psth="/404" component={P404} exact/>
